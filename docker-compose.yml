@@ -1,0 +1,39 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: tipum-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tipum
+      MYSQL_USER: tipum
+      MYSQL_PASSWORD: tipum123
+    ports:
+      - "3306:3306"
+    volumes:
+      - tipum_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: .
+    container_name: tipum-backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: tipum
+      DB_USER: tipum
+      DB_PASSWORD: tipum123
+      JWT_SECRET: TipumSecretKeyParaJWT2026FullstackIISeguridadRol
+    ports:
+      - "8080:8080"
+
+volumes:
+  tipum_mysql_data:

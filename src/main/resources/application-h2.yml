@@ -1,0 +1,11 @@
+# Perfil alternativo para ejecutar el backend con H2 en memoria (sin MySQL).
+# Uso: java -jar tipum-backend.jar --spring.profiles.active=h2
+spring:
+  datasource:
+    url: jdbc:h2:mem:tipum;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
